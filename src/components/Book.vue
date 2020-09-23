@@ -76,7 +76,7 @@ export default {
 
     prices() {
       return {
-        b: Object.keys(this.renderData.b).sort((a, b) => +b - +a),
+        b: Object.keys(this.renderData.b).sort((a, b) => +a - +b),
         s: Object.keys(this.renderData.s).sort((a, b) => +b - +a)
       };
     }
