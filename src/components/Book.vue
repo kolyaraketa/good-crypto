@@ -1,6 +1,6 @@
 <template>
   <div class="book">
-    <table>
+    <table class="book__table">
       <caption>{{ stock }}</caption>
       <thead>
         <th>Bid</th>
@@ -9,16 +9,18 @@
       </thead>
       <tbody>
         <tr
-          v-for="price in prices.s"
+          v-for="price in prices.s.slice(depth * -1)"
           :key="price"
+          class="book__table-s"
         >
           <td></td>
           <td>{{ priceFormatter(price) }}</td>
           <td>{{ renderData.s[price] }}</td>
         </tr>
         <tr
-          v-for="price in prices.b"
-          :key="price"
+          v-for="(price, index) in prices.b.slice(0, depth)"
+          :key="index"
+          class="book__table-b"
         >
           <td>{{ renderData.b[price] }}</td>
           <td>{{ priceFormatter(price) }}</td>
@@ -46,6 +48,10 @@ export default {
     },
     stock: {
       type: String,
+      required: true
+    },
+    depth: {
+      type: Number,
       required: true
     }
   },
@@ -89,3 +95,16 @@ export default {
   }
 };
 </script>
+
+
+<style lang="sass" scoped>
+.book__table
+  border-collapse: collapse
+  th,td
+    border: 1px solid #333
+    padding: 5px 10px
+.book__table-s
+  background-color: tomato
+.book__table-b
+  background-color: lightgreen
+</style>

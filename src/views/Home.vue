@@ -6,14 +6,34 @@
         v-model.number="intervalDuration"
         pattern="\d+"
         type="number"
-        @input="validateIntervalDuration"
+        @input="inputIntervalDuration"
       />
     </label>
-    <book
-      v-if="books.SPY"
-      :data="books.SPY"
-      stock="SPY"
-    />
+    <label>
+      Max Depth
+      <input
+        v-model.number="depth"
+        pattern="\d+"
+        type="number"
+        @input="validateDepth"
+      />
+    </label>
+    <div
+      v-if="Object.keys(books).length"
+      class="home__books"
+    >
+      <div
+        v-for="(data, stock) in books"
+        :key="stock"
+        class="home__book"
+      >
+        <book
+          :data="data"
+          :stock="stock"
+          :depth="depth"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -26,6 +46,8 @@ import SPY from '@/json/SPY';
 const STOCK_DATA = { SPY, EQL };
 const MAX_INTERVAL = 60;
 const MIN_INTERVAL = 1;
+const MAX_DEPTH = 99;
+const MIN_DEPTH = 1;
 const MSG_TYPES = {
   ADD: 'addMessage',
   DELETE: 'deleteMessage',
@@ -43,7 +65,8 @@ export default {
       books: {},
       interval: null,
       intervalPosition: 0,
-      intervalDuration: 1 // Seconds
+      intervalDuration: 1, // Seconds
+      depth: 10
     };
   },
 
@@ -72,11 +95,25 @@ export default {
       }, this.intervalDuration * 1000);
     },
 
+    inputIntervalDuration() {
+      clearInterval(this.interval);
+      this.validateIntervalDuration();
+      this.setUpdateInterval();
+    },
+
     validateIntervalDuration() {
       if (this.intervalDuration > MAX_INTERVAL) {
         this.intervalDuration = MAX_INTERVAL;
       } else if (this.intervalDuration < MIN_INTERVAL) {
         this.intervalDuration = MIN_INTERVAL;
+      }
+    },
+
+    validateDepth() {
+      if (this.depth > MAX_DEPTH) {
+        this.depth = MAX_DEPTH;
+      } else if (this.depth < MIN_DEPTH) {
+        this.depth = MIN_DEPTH;
       }
     },
 
@@ -132,3 +169,13 @@ export default {
   }
 };
 </script>
+
+<style lang="sass" scoped>
+.home__books
+  display: flex
+  justify-content: center
+  align-items: flex-start
+  padding-top: 30px
+.home__book
+  margin: 0 50px
+</style>
