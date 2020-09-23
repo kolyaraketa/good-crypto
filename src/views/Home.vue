@@ -9,10 +9,17 @@
         @input="validateIntervalDuration"
       />
     </label>
+    <book
+      v-if="books.SPY"
+      :data="books.SPY"
+      stock="SPY"
+    />
   </div>
 </template>
 
 <script>
+import Book from '@/components/Book.vue';
+
 import EQL from '@/json/EQL';
 import SPY from '@/json/SPY';
 
@@ -30,14 +37,13 @@ const MSG_TYPES = {
 
 export default {
   name: 'Home',
-  components: {},
+  components: { Book },
   data() {
     return {
       books: {},
       interval: null,
       intervalPosition: 0,
-      intervalDuration: 3 // Seconds
-      // startedAt: Date.now()
+      intervalDuration: 1 // Seconds
     };
   },
 
@@ -48,8 +54,7 @@ export default {
   methods: {
     init() {
       Object.keys(STOCK_DATA).forEach((type) => {
-        // b + s is an Arrays of objects: { price: String, shares: Array }
-        this.books[type] = [];
+        this.$set(this.books, type, []);
       }, {});
       this.setUpdateInterval();
     },
